@@ -1,16 +1,103 @@
-# React + Vite
+# Portafolio Personal - YaxcheItz
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portafolio personal construido con React, Vite y Tailwind CSS. Incluye integración con GitHub API y sistema de contacto mediante EmailJS.
 
-Currently, two official plugins are available:
+## Características
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ✨ Diseño moderno y responsive
+- 🎨 Tailwind CSS para estilos
+- 📱 Menú hamburguesa para móviles
+- 🚀 Integración con GitHub API para mostrar proyectos
+- 📧 Formulario de contacto funcional con EmailJS
+- 🎯 Optimizado para SEO con meta tags
+- ♿ Accesible y con aria-labels
 
-## React Compiler
+## Instalación
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Instalar dependencias
+npm install
 
-## Expanding the ESLint configuration
+# Ejecutar en desarrollo
+npm run dev
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Construir para producción
+npm run build
+```
+
+## Configuración del Formulario de Contacto
+
+El formulario actualmente usa `mailto` como fallback. Para configurar EmailJS (recomendado):
+
+### Opción 1: EmailJS (Recomendado)
+
+1. Instala el paquete de EmailJS:
+   ```bash
+   npm install @emailjs/browser
+   ```
+
+2. Agrega el import en `src/App.jsx`:
+   ```javascript
+   import emailjs from '@emailjs/browser';
+   ```
+
+3. Crea una cuenta en [EmailJS](https://www.emailjs.com/)
+
+4. Configura un servicio de email (Gmail, Outlook, etc.)
+
+5. Crea una plantilla de email con los siguientes campos:
+   - `{{from_name}}` - Nombre del remitente
+   - `{{from_email}}` - Email del remitente
+   - `{{message}}` - Mensaje
+
+6. Copia el archivo `.env.example` a `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+7. Completa las variables de entorno en `.env`:
+   ```
+   VITE_EMAILJS_SERVICE_ID=tu_service_id
+   VITE_EMAILJS_TEMPLATE_ID=tu_template_id
+   VITE_EMAILJS_PUBLIC_KEY=tu_public_key
+   ```
+
+8. Agrega el script de EmailJS en `index.html` (dentro de `<head>`):
+   ```html
+   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+   <script>
+     emailjs.init("TU_PUBLIC_KEY");
+   </script>
+   ```
+
+### Opción 2: Mailto (Actual)
+
+El formulario abrirá tu cliente de correo predeterminado. Cambia el email en `src/App.jsx` línea con `mailto:tu-email@ejemplo.com`
+
+## Tecnologías Utilizadas
+
+- React 19
+- Vite
+- Tailwind CSS
+- EmailJS
+- GitHub API
+
+## Estructura del Proyecto
+
+```
+mi-portafolio/
+├── src/
+│   ├── App.jsx          # Componente principal
+│   ├── main.jsx         # Punto de entrada
+│   └── index.css        # Estilos globales
+├── public/              # Archivos estáticos
+└── index.html           # HTML principal
+```
+
+## Personalización
+
+1. Edita los datos personales en `src/App.jsx`
+2. Reemplaza los enlaces de GitHub y LinkedIn
+3. Actualiza las habilidades y experiencias
+4. Agrega tu foto de perfil
+5. Coloca tu CV en la carpeta `public/`
