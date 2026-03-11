@@ -16,8 +16,27 @@ const LinkedinIcon = () => (
 );
 
 function App() {
-  const [repos, setRepos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [repos] = useState([
+    {
+      id: 1,
+      name: "RAPPI-SAFE",
+      description: "Aplicación de monitoreo de seguridad desarrollada con Django y TailwindCSS. Implementé un sistema de notificaciones en tiempo real a través de la API de Telegram y diseñé un flujo de despliegue automatizado en Render.",
+      html_url: "https://github.com/YaxcheItz/RAPPI-SAFE",
+      live_url: "https://rappisafe-mdo8.onrender.com/",
+      language: "Python / Django",
+      updated_at: "2026-03-10"
+    },
+    {
+      id: 2,
+      name: "Universo Dev",
+      description: "Plataforma web para la gestión de torneos de desarrollo (Laravel/PHP). Arquitecturé un sistema con múltiples roles, filtros de búsqueda avanzados y carga segura de archivos. Contenerizado con Docker y desplegado en Render con PostgreSQL.",
+      html_url: "https://github.com/YaxcheItz/universo_dev",
+      live_url: "https://universo-dev.onrender.com/login",
+      language: "PHP / Laravel",
+      updated_at: "2026-03-10"
+    }
+  ]);
+  const [loading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formStatus, setFormStatus] = useState({ sending: false, success: false, error: false });
   const [activeSection, setActiveSection] = useState('inicio');
@@ -47,19 +66,7 @@ function App() {
     }
   ];
 
-  useEffect(() => {
-    fetch('https://api.github.com/users/YaxcheItz/repos?sort=updated')
-      .then(response => response.json())
-      .then(data => {
-        const filteredRepos = data.filter(repo => repo.name !== 'YaxcheItz');
-        setRepos(filteredRepos);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error("Error fetching repos:", error);
-        setLoading(false);
-      });
-  }, []);
+  // Los proyectos se cargan localmente de forma estática
 
   // Intersection Observer para detectar sección activa
   useEffect(() => {
@@ -321,9 +328,20 @@ function App() {
                       <div className="p-2 bg-gray-900 rounded-lg text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
                       </div>
-                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
-                        <GithubIcon />
-                      </a>
+                      <div className="flex gap-4">
+                        {repo.html_url && (
+                          <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors" title="Ver código en GitHub">
+                            <GithubIcon />
+                          </a>
+                        )}
+                        {repo.live_url && (
+                          <a href={repo.live_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors" title="Ver proyecto en vivo">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
                     </div>
                     <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
                       {repo.name}
