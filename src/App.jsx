@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
-// Componentes de Iconos (SVG)
-const GithubIcon = () => (
-  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" role="img">
-    <title>GitHub</title>
-    <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-  </svg>
-);
-
-const LinkedinIcon = () => (
-  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" role="img">
-    <title>LinkedIn</title>
-    <path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" />
-  </svg>
-);
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Skills from './components/Skills';
+import Experience from './components/Experience';
+import Projects from './components/Projects';
+import Contact from './components/Contact';
 
 function App() {
   const [repos] = useState([
@@ -41,7 +33,6 @@ function App() {
   const [formStatus, setFormStatus] = useState({ sending: false, success: false, error: false });
   const [activeSection, setActiveSection] = useState('inicio');
 
-  // Lista de habilidades con sus iconos (Devicons)
   const skills = [
     { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" },
     { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
@@ -55,7 +46,6 @@ function App() {
     { name: "Spring Boot", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" }
   ];
 
-  // Datos de experiencia
   const experiences = [
     {
       id: 1,
@@ -66,74 +56,42 @@ function App() {
     }
   ];
 
-  // Los proyectos se cargan localmente de forma estática
-
-  // Intersection Observer para detectar sección activa
   useEffect(() => {
     const sections = document.querySelectorAll('section[id]');
-
-    const observerOptions = {
-      root: null,
-      rootMargin: '-50% 0px -50% 0px',
-      threshold: 0
-    };
-
+    const observerOptions = { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 };
     const observerCallback = (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
+        if (entry.isIntersecting) setActiveSection(entry.target.id);
       });
     };
-
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    sections.forEach((section) => {
-      observer.observe(section);
-    });
-
-    return () => {
-      sections.forEach((section) => {
-        observer.unobserve(section);
-      });
-    };
+    sections.forEach((section) => observer.observe(section));
+    return () => sections.forEach((section) => observer.unobserve(section));
   }, []);
 
-  // Manejador del formulario con EmailJS (requiere configuración)
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Opción 1: Si EmailJS está configurado
     if (typeof window !== 'undefined' && window.emailjs) {
       setFormStatus({ sending: true, success: false, error: false });
-
       const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
       const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
       try {
         await window.emailjs.sendForm(serviceID, templateID, e.target, publicKey);
         setFormStatus({ sending: false, success: true, error: false });
         e.target.reset();
         setTimeout(() => setFormStatus({ sending: false, success: false, error: false }), 5000);
       } catch (error) {
-        console.error('Error al enviar el mensaje:', error);
         setFormStatus({ sending: false, success: false, error: true });
         setTimeout(() => setFormStatus({ sending: false, success: false, error: false }), 5000);
       }
     } else {
-      // Opción 2: Fallback - crear un mailto
       const formData = new FormData(e.target);
       const name = formData.get('from_name');
       const email = formData.get('from_email');
       const message = formData.get('message');
-
-      const mailtoLink = `yaxtibla1@gmail.com?subject=Mensaje de ${name}&body=${encodeURIComponent(
-        `Nombre: ${name}\nEmail: ${email}\n\nMensaje:\n${message}`
-      )}`;
-
+      const mailtoLink = `yaxtibla1@gmail.com?subject=Mensaje de ${name}&body=${encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\n\nMensaje:\n${message}`)}`;
       window.location.href = mailtoLink;
-
       setFormStatus({ sending: false, success: true, error: false });
       e.target.reset();
       setTimeout(() => setFormStatus({ sending: false, success: false, error: false }), 3000);
@@ -142,297 +100,19 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 font-sans text-gray-300 selection:bg-cyan-500 selection:text-white">
-      
-      {/* Navegación Fija */}
-      <nav className="fixed w-full z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-800" role="navigation" aria-label="Navegación principal">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <a href="#inicio" className="text-xl font-bold text-white tracking-wider" aria-label="Ir al inicio">YaxcheItz<span className="text-cyan-400">.dev</span></a>
-
-            {/* Menú Desktop */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <a href="#sobre-mi" className={`hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-sm font-medium ${activeSection === 'sobre-mi' ? 'text-cyan-400 border-b-2 border-cyan-400' : ''}`}>Sobre Mí</a>
-                <a href="#habilidades" className={`hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-sm font-medium ${activeSection === 'habilidades' ? 'text-cyan-400 border-b-2 border-cyan-400' : ''}`}>Habilidades</a>
-                <a href="#experiencia" className={`hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-sm font-medium ${activeSection === 'experiencia' ? 'text-cyan-400 border-b-2 border-cyan-400' : ''}`}>Experiencia</a>
-                <a href="#proyectos" className={`hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-sm font-medium ${activeSection === 'proyectos' ? 'text-cyan-400 border-b-2 border-cyan-400' : ''}`}>Proyectos</a>
-              </div>
-            </div>
-            <a href="#contacto" className="hidden md:inline-flex bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-              Hablemos
-            </a>
-
-            {/* Botón Hamburguesa Mobile */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-gray-300 hover:text-white focus:outline-none"
-              aria-label="Menú"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
-
-          {/* Menú Mobile Desplegable */}
-          {mobileMenuOpen && (
-            <div className="md:hidden pb-4 pt-2 space-y-1">
-              <a href="#sobre-mi" onClick={() => setMobileMenuOpen(false)} className={`block hover:bg-gray-800 hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-base font-medium ${activeSection === 'sobre-mi' ? 'bg-gray-800 text-cyan-400 border-l-4 border-cyan-400' : ''}`}>Sobre Mí</a>
-              <a href="#habilidades" onClick={() => setMobileMenuOpen(false)} className={`block hover:bg-gray-800 hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-base font-medium ${activeSection === 'habilidades' ? 'bg-gray-800 text-cyan-400 border-l-4 border-cyan-400' : ''}`}>Habilidades</a>
-              <a href="#experiencia" onClick={() => setMobileMenuOpen(false)} className={`block hover:bg-gray-800 hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-base font-medium ${activeSection === 'experiencia' ? 'bg-gray-800 text-cyan-400 border-l-4 border-cyan-400' : ''}`}>Experiencia</a>
-              <a href="#proyectos" onClick={() => setMobileMenuOpen(false)} className={`block hover:bg-gray-800 hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-base font-medium ${activeSection === 'proyectos' ? 'bg-gray-800 text-cyan-400 border-l-4 border-cyan-400' : ''}`}>Proyectos</a>
-              <a href="#contacto" onClick={() => setMobileMenuOpen(false)} className="block bg-cyan-600 hover:bg-cyan-700 text-white text-center px-3 py-2 rounded-md text-base font-medium transition-colors mt-2">Hablemos</a>
-            </div>
-          )}
-        </div>
-      </nav>
-
-      <main className="pt-24 pb-12" role="main">
-        {/* Hero Section */}
-        <section id="inicio" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 flex flex-col items-center text-center" aria-label="Sección de bienvenida">
-          <div className="inline-block mb-4 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-sm font-medium tracking-wide">
-            Disponible para nuevas oportunidades
-          </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6">
-            Hola, soy <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">YaxcheItz</span>
-          </h1>
-          <p className="mt-4 max-w-2xl text-xl text-gray-400 mb-10">
-            Desarrollador de Software apasionado por crear experiencias web modernas, rápidas y escalables. Transformo ideas en código estructurado y funcional.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a href="#proyectos" className="px-8 py-3 rounded-lg bg-white text-gray-900 font-bold hover:bg-gray-100 transition-colors" aria-label="Ver mis proyectos">
-              Ver Proyectos
-            </a>
-            <a href="#contacto" className="px-8 py-3 rounded-lg border border-gray-700 text-white font-bold hover:bg-gray-800 transition-colors" aria-label="Ir a formulario de contacto">
-              Contactar
-            </a>
-            <a
-              href="/CV_YaxcheItz.pdf"
-              download
-              className="px-8 py-3 rounded-lg border border-cyan-500 text-cyan-400 font-bold hover:bg-cyan-500 hover:text-white transition-colors inline-flex items-center justify-center gap-2"
-              aria-label="Descargar mi currículum en PDF"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              Descargar CV
-            </a>
-          </div>
-        </section>
-
-        {/* Sobre Mí Section */}
-        <section id="sobre-mi" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-gray-800" aria-labelledby="sobre-mi-heading">
-          <h2 id="sobre-mi-heading" className="text-3xl font-bold text-white mb-8 flex items-center">
-            <span className="w-8 h-[2px] bg-cyan-500 mr-4"></span> Sobre Mí
-          </h2>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="text-lg text-gray-400 space-y-4">
-              <p>
-                Soy un desarrollador enfocado en construir soluciones tecnológicas eficientes. Me gusta el aprendizaje continuo y mantenerme al día con las nuevas tecnologías del ecosistema web.
-              </p>
-              <p>
-                A lo largo de mi formación, he trabajado en proyectos utilizando tecnologías tanto de Frontend como de Backend, desarrollando desde interfaces atractivas hasta la lógica del lado del servidor y bases de datos.
-              </p>
-              <p>
-                Cuando no estoy programando, disfruto aprendiendo nuevas herramientas y mejorando mis habilidades analíticas para resolver problemas complejos.
-              </p>
-            </div>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl transform rotate-3 opacity-20"></div>
-              <div className="bg-gray-800 border border-gray-700 rounded-2xl p-8 relative flex items-center justify-center min-h-[300px] overflow-hidden">
-                {/* Descomenta y usa tu foto - coloca tu imagen en /public/profile.jpg */}
-                {/* <img
-                  src="/profile.jpg"
-                  alt="YaxcheItz"
-                  className="w-full h-full object-cover rounded-xl"
-                /> */}
-
-                {/* Placeholder mientras no tengas foto - elimina esto cuando agregues tu imagen */}
-                <div className="flex flex-col items-center justify-center text-center">
-                  <svg className="w-24 h-24 text-cyan-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  <p className="text-gray-500 text-sm max-w-xs">
-                    Coloca tu foto en <code className="text-cyan-400 text-xs">/public/profile.jpg</code> y descomenta el código de imagen en <code className="text-cyan-400 text-xs">App.jsx:131-135</code>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Habilidades Section */}
-        <section id="habilidades" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-gray-800" aria-labelledby="habilidades-heading">
-          <h2 id="habilidades-heading" className="text-3xl font-bold text-white mb-10 flex items-center justify-center md:justify-start">
-             <span className="w-8 h-[2px] bg-cyan-500 mr-4 hidden md:block"></span> Tecnologías y Herramientas
-          </h2>
-          <div className="flex flex-wrap gap-6 justify-center md:justify-start">
-            {skills.map((skill, index) => (
-              <div key={index} className="flex items-center gap-3 bg-gray-800 border border-gray-700 text-gray-300 px-5 py-3 rounded-lg text-lg font-medium hover:border-cyan-500 hover:shadow-md hover:shadow-cyan-500/10 transition-all cursor-default group">
-                <img src={skill.icon} alt={skill.name} className="w-8 h-8 group-hover:scale-110 transition-transform" />
-                <span className="group-hover:text-cyan-400 transition-colors">{skill.name}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Experiencia Section */}
-        <section id="experiencia" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-gray-800" aria-labelledby="experiencia-heading">
-          <h2 id="experiencia-heading" className="text-3xl font-bold text-white mb-12 flex items-center">
-            <span className="w-8 h-[2px] bg-cyan-500 mr-4"></span> Experiencia
-          </h2>
-          <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-700 before:to-transparent">
-            {experiences.map((exp, index) => (
-              <div key={exp.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full border border-gray-700 bg-gray-900 text-cyan-500 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                </div>
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-gray-800 border border-gray-700 p-6 rounded-xl shadow-lg hover:border-cyan-500/50 transition-colors">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2">
-                    <h3 className="text-xl font-bold text-white">{exp.role}</h3>
-                    <span className="text-cyan-400 text-sm font-medium bg-cyan-500/10 px-3 py-1 rounded-full mt-2 sm:mt-0">{exp.period}</span>
-                  </div>
-                  <div className="text-gray-400 font-medium mb-4">{exp.company}</div>
-                  <p className="text-gray-400">{exp.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Proyectos Section */}
-        <section id="proyectos" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-t border-gray-800" aria-labelledby="proyectos-heading">
-          <div className="flex justify-between items-end mb-12">
-            <h2 id="proyectos-heading" className="text-3xl font-bold text-white flex items-center">
-              <span className="w-8 h-[2px] bg-cyan-500 mr-4"></span> Proyectos Destacados
-            </h2>
-            <a href="https://github.com/YaxcheItz" target="_blank" rel="noopener noreferrer" className="hidden sm:flex text-cyan-400 hover:text-cyan-300 font-medium items-center transition-colors">
-              Ver todos en GitHub <span className="ml-2">&rarr;</span>
-            </a>
-          </div>
-          
-          {loading ? (
-            <div className="flex justify-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {repos.map(repo => (
-                <div key={repo.id} className="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10 hover:border-cyan-500/50 transition-all duration-300 flex flex-col h-full group">
-                  <div className="p-6 flex-grow flex flex-col">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="p-2 bg-gray-900 rounded-lg text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                      </div>
-                      <div className="flex gap-4">
-                        {repo.html_url && (
-                          <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors" title="Ver código en GitHub">
-                            <GithubIcon />
-                          </a>
-                        )}
-                        {repo.live_url && (
-                          <a href={repo.live_url} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors" title="Ver proyecto en vivo">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
-                      {repo.name}
-                    </h3>
-                    <p className="text-gray-400 text-sm leading-relaxed mb-4 flex-grow">
-                      {repo.description || "Proyecto almacenado en mi repositorio de GitHub. Haz clic en el icono superior para ver el código fuente y más detalles."}
-                    </p>
-                  </div>
-                  <div className="px-6 py-4 bg-gray-900/50 border-t border-gray-700 mt-auto flex items-center justify-between">
-                    <div className="flex items-center">
-                      <span className="w-3 h-3 rounded-full bg-cyan-500 mr-2"></span>
-                      <span className="text-sm font-medium text-gray-300">{repo.language || 'Código'}</span>
-                    </div>
-                    <span className="text-xs text-gray-500">{new Date(repo.updated_at).toLocaleDateString()}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="mt-8 text-center sm:hidden">
-             <a href="https://github.com/YaxcheItz" target="_blank" rel="noopener noreferrer" className="inline-flex text-cyan-400 hover:text-cyan-300 font-medium items-center transition-colors">
-              Ver todos en GitHub <span className="ml-2">&rarr;</span>
-            </a>
-          </div>
-        </section>
+      <Navbar 
+        activeSection={activeSection} 
+        mobileMenuOpen={mobileMenuOpen} 
+        setMobileMenuOpen={setMobileMenuOpen} 
+      />
+      <main className="pt-24 pb-12">
+        <Hero />
+        <About />
+        <Skills skills={skills} />
+        <Experience experiences={experiences} />
+        <Projects repos={repos} loading={loading} />
       </main>
-
-      {/* Contacto & Footer */}
-      <footer id="contacto" className="bg-gray-950 border-t border-gray-800 pt-20 pb-12" role="contentinfo" aria-labelledby="contacto-heading">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 id="contacto-heading" className="text-3xl md:text-5xl font-bold text-white mb-6">¿Trabajamos juntos?</h2>
-          <p className="text-gray-400 text-lg mb-12 max-w-2xl mx-auto">
-            Actualmente estoy buscando nuevas oportunidades. Si tienes alguna pregunta, una propuesta de proyecto o simplemente quieres saludar, envíame un mensaje.
-          </p>
-          
-          {/* Formulario de Contacto */}
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-2xl max-w-xl mx-auto mb-16 relative overflow-hidden">
-            {/* Elemento decorativo */}
-            <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-cyan-500/10 blur-2xl"></div>
-            
-            <form onSubmit={handleSubmit} className="text-left relative z-10">
-              <div className="grid grid-cols-1 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">Nombre</label>
-                  <input type="text" id="name" name="from_name" required disabled={formStatus.sending} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors disabled:opacity-50" placeholder="Tu nombre" />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-400 mb-2">Correo Electrónico</label>
-                  <input type="email" id="email" name="from_email" required disabled={formStatus.sending} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors disabled:opacity-50" placeholder="tu@correo.com" />
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-400 mb-2">Mensaje</label>
-                  <textarea id="message" name="message" rows="4" required disabled={formStatus.sending} className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors resize-none disabled:opacity-50" placeholder="¿En qué te puedo ayudar?"></textarea>
-                </div>
-
-                {/* Mensajes de estado */}
-                {formStatus.success && (
-                  <div className="bg-green-500/10 border border-green-500 text-green-400 px-4 py-3 rounded-lg">
-                    ✓ ¡Mensaje enviado con éxito! Te responderé pronto.
-                  </div>
-                )}
-                {formStatus.error && (
-                  <div className="bg-red-500/10 border border-red-500 text-red-400 px-4 py-3 rounded-lg">
-                    ✗ Error al enviar el mensaje. Por favor, intenta de nuevo.
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={formStatus.sending}
-                  className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-cyan-500/25 transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                >
-                  {formStatus.sending ? 'Enviando...' : 'Enviar Mensaje'}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Redes Sociales */}
-          <div className="flex justify-center space-x-10" role="navigation" aria-label="Enlaces de redes sociales">
-            <a href="https://github.com/YaxcheItz" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transform hover:scale-110 transition-all flex flex-col items-center gap-2" aria-label="Visitar mi perfil de GitHub (se abre en nueva pestaña)">
-              <GithubIcon />
-              <span className="text-sm font-medium">GitHub</span>
-            </a>
-            <a href="https://www.linkedin.com/in/yaxche-itzamna-ramirez-garcia-b7556a177/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0A66C2] transform hover:scale-110 transition-all flex flex-col items-center gap-2" aria-label="Visitar mi perfil de LinkedIn (se abre en nueva pestaña)">
-              <LinkedinIcon />
-              <span className="text-sm font-medium">LinkedIn</span>
-            </a>
-          </div>
-        </div>
-      </footer>
+      <Contact handleSubmit={handleSubmit} formStatus={formStatus} />
     </div>
   );
 }
