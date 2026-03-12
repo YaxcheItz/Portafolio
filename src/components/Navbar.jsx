@@ -37,16 +37,6 @@ const Navbar = ({ activeSection, mobileMenuOpen, setMobileMenuOpen, lang, setLan
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Social Links Desktop */}
-            <div className="flex items-center gap-3 mr-3 pr-3 border-r border-gray-800">
-              <a href="https://github.com/YaxcheItz" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors scale-90" title="GitHub">
-                <GithubIcon />
-              </a>
-              <a href="https://www.linkedin.com/in/yaxche-itzamna-ramirez-garcia-b7556a177/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0A66C2] transition-colors scale-90" title="LinkedIn">
-                <LinkedinIcon />
-              </a>
-            </div>
-
             {/* Language Toggle */}
             <button
               onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
