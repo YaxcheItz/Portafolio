@@ -6,13 +6,19 @@ import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import { translations } from './translations';
 
 function App() {
+  const [lang, setLang] = useState('es');
+  const t = translations[lang];
+
   const [repos] = useState([
     {
       id: 1,
       name: "RAPPI-SAFE",
-      description: "Aplicación de monitoreo de seguridad desarrollada con Django y TailwindCSS. Implementé un sistema de notificaciones en tiempo real a través de la API de Telegram y diseñé un flujo de despliegue automatizado en Render.",
+      description: lang === 'es' 
+        ? "Aplicación de monitoreo de seguridad desarrollada con Django y TailwindCSS. Implementé un sistema de notificaciones en tiempo real a través de la API de Telegram y diseñé un flujo de despliegue automatizado en Render."
+        : "Security monitoring application developed with Django and TailwindCSS. I implemented a real-time notification system via the Telegram API and designed an automated deployment flow on Render.",
       html_url: "https://github.com/YaxcheItz/RAPPI-SAFE",
       live_url: "https://rappisafe-mdo8.onrender.com/",
       language: "Python / Django",
@@ -21,13 +27,16 @@ function App() {
     {
       id: 2,
       name: "Universo Dev",
-      description: "Plataforma web para la gestión de torneos de desarrollo (Laravel/PHP). Arquitecturé un sistema con múltiples roles, filtros de búsqueda avanzados y carga segura de archivos. Contenerizado con Docker y desplegado en Render con PostgreSQL.",
+      description: lang === 'es'
+        ? "Plataforma web para la gestión de torneos de desarrollo (Laravel/PHP). Arquitecturé un sistema con múltiples roles, filtros de búsqueda avanzados y carga segura de archivos. Contenerizado con Docker y desplegado en Render con PostgreSQL."
+        : "Web platform for development tournament management (Laravel/PHP). I architected a system with multiple roles, advanced search filters, and secure file uploading. Containerized with Docker and deployed on Render with PostgreSQL.",
       html_url: "https://github.com/YaxcheItz/universo_dev",
       live_url: "https://universo-dev.onrender.com/login",
       language: "PHP / Laravel",
       updated_at: "2026-03-10"
     }
   ]);
+
   const [loading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formStatus, setFormStatus] = useState({ sending: false, success: false, error: false });
@@ -49,10 +58,12 @@ function App() {
   const experiences = [
     {
       id: 1,
-      role: "Desarrollador Web (Proyecto Académico/Personal)",
-      company: "Proyectos Independientes",
+      role: lang === 'es' ? "Desarrollador Web (Proyecto Académico/Personal)" : "Web Developer (Academic/Personal Project)",
+      company: lang === 'es' ? "Proyectos Independientes" : "Independent Projects",
       period: "2023 - Presente",
-      description: "Desarrollo de aplicaciones web utilizando tecnologías como Laravel para el backend y HTML/CSS/JS para el frontend. Creación de sistemas de login y páginas web responsivas."
+      description: lang === 'es' 
+        ? "Desarrollo de aplicaciones web utilizando tecnologías como Laravel para el backend y HTML/CSS/JS para el frontend. Creación de sistemas de login y páginas web responsivas."
+        : "Development of web applications using technologies such as Laravel for the backend and HTML/CSS/JS for the frontend. Creation of login systems and responsive web pages."
     }
   ];
 
@@ -99,20 +110,23 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 font-sans text-gray-300 selection:bg-cyan-500 selection:text-white">
+    <div className="min-h-screen bg-black font-sans text-gray-300 selection:bg-cyan-500 selection:text-white transition-colors duration-300">
       <Navbar 
         activeSection={activeSection} 
         mobileMenuOpen={mobileMenuOpen} 
         setMobileMenuOpen={setMobileMenuOpen} 
+        lang={lang}
+        setLang={setLang}
+        t={t.nav}
       />
       <main className="pt-24 pb-12">
-        <Hero />
-        <About />
-        <Skills skills={skills} />
-        <Experience experiences={experiences} />
-        <Projects repos={repos} loading={loading} />
+        <Hero t={t.hero} />
+        <About t={t.about} />
+        <Skills skills={skills} t={t.skills} />
+        <Experience experiences={experiences} t={t.experience} skillsT={t.skills} />
+        <Projects repos={repos} loading={loading} t={t.projects} />
       </main>
-      <Contact handleSubmit={handleSubmit} formStatus={formStatus} />
+      <Contact handleSubmit={handleSubmit} formStatus={formStatus} t={t.contact} />
     </div>
   );
 }

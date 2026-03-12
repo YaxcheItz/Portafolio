@@ -1,36 +1,63 @@
 import React from 'react';
+import { motion } from 'motion/react';
 
-const Hero = () => {
+const Hero = ({ t }) => {
   return (
-    <section id="inicio" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 flex flex-col items-center text-center" aria-label="Sección de bienvenida">
-      <div className="inline-block mb-4 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-sm font-medium tracking-wide">
-        Disponible para nuevas oportunidades
-      </div>
-      <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6">
-        Hola, soy <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">YaxcheItz</span>
-      </h1>
-      <p className="mt-4 max-w-2xl text-xl text-gray-400 mb-10">
-        Desarrollador de Software apasionado por crear experiencias web modernas, rápidas y escalables. Transformo ideas en código estructurado y funcional.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-4">
-        <a href="#proyectos" className="px-8 py-3 rounded-lg bg-white text-gray-900 font-bold hover:bg-gray-100 transition-colors" aria-label="Ver mis proyectos">
-          Ver Proyectos
+    <section id="inicio" className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 flex flex-col items-center text-center overflow-hidden" aria-label="Sección de bienvenida">
+      {/* Background Decor */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[100px] -z-10"></div>
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 text-[10px] font-bold uppercase tracking-widest"
+      >
+        <span className="relative flex h-1.5 w-1.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500"></span>
+        </span>
+        {t.available}
+      </motion.div>
+      
+      <motion.h1 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="text-4xl md:text-6xl font-extrabold text-white tracking-tight mb-6 leading-tight"
+      >
+        {t.greeting}<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">YaxcheItz</span>
+      </motion.h1>
+      
+      <motion.p 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="max-w-2xl text-base md:text-lg text-gray-400 mb-10 leading-relaxed"
+      >
+        {t.description}
+      </motion.p>
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="flex flex-wrap justify-center gap-4"
+      >
+        <a href="#proyectos" className="px-6 py-2.5 rounded-lg bg-cyan-600 text-white text-sm font-bold hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-900/10" aria-label="Ver mis proyectos">
+          {t.viewProjects}
         </a>
-        <a href="#contacto" className="px-8 py-3 rounded-lg border border-gray-700 text-white font-bold hover:bg-gray-800 transition-colors" aria-label="Ir a formulario de contacto">
-          Contactar
+        <a href="#contacto" className="px-6 py-2.5 rounded-lg border border-gray-700 text-white text-sm font-bold hover:bg-gray-800 transition-all" aria-label="Ir a formulario de contacto">
+          {t.contact}
         </a>
         <a
           href="/CV_YaxcheItz.pdf"
           download
-          className="px-8 py-3 rounded-lg border border-cyan-500 text-cyan-400 font-bold hover:bg-cyan-500 hover:text-white transition-colors inline-flex items-center justify-center gap-2"
-          aria-label="Descargar mi currículum en PDF"
+          className="px-6 py-2.5 rounded-lg border border-cyan-500/20 text-cyan-400 text-sm font-bold hover:bg-cyan-500/5 transition-all inline-flex items-center justify-center gap-2"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          Descargar CV
+          {t.downloadCV}
         </a>
-      </div>
+      </motion.div>
     </section>
   );
 };
