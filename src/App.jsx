@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -82,35 +83,34 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (typeof window !== 'undefined' && window.emailjs) {
-      setFormStatus({ sending: true, success: false, error: false });
-      const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-      try {
-        await window.emailjs.sendForm(serviceID, templateID, e.target, publicKey);
-        setFormStatus({ sending: false, success: true, error: false });
-        e.target.reset();
-        setTimeout(() => setFormStatus({ sending: false, success: false, error: false }), 5000);
-      } catch (error) {
-        setFormStatus({ sending: false, success: false, error: true });
-        setTimeout(() => setFormStatus({ sending: false, success: false, error: false }), 5000);
-      }
-    } else {
-      const formData = new FormData(e.target);
-      const name = formData.get('from_name');
-      const email = formData.get('from_email');
-      const message = formData.get('message');
-      const mailtoLink = `yaxtibla1@gmail.com?subject=Mensaje de ${name}&body=${encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\n\nMensaje:\n${message}`)}`;
-      window.location.href = mailtoLink;
+    setFormStatus({ sending: true, success: false, error: false });
+
+    const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    try {
+      await emailjs.sendForm(serviceID, templateID, e.target, publicKey);
       setFormStatus({ sending: false, success: true, error: false });
       e.target.reset();
-      setTimeout(() => setFormStatus({ sending: false, success: false, error: false }), 3000);
+      setTimeout(() => setFormStatus({ sending: false, success: false, error: false }), 5000);
+    } catch (error) {
+      console.error('Error enviando el correo:', error);
+      setFormStatus({ sending: false, success: false, error: true });
+      setTimeout(() => setFormStatus({ sending: false, success: false, error: false }), 5000);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black font-sans text-gray-300 selection:bg-cyan-500 selection:text-white transition-colors duration-300">
+    <div className="min-h-screen bg-[#020617] font-sans text-gray-300 selection:bg-cyan-500 selection:text-white transition-colors duration-300 relative overflow-x-hidden">
+      {/* Global Background Elements */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-[0.1]"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/10 blur-[120px] animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] rounded-full bg-cyan-600/5 blur-[100px]"></div>
+      </div>
+
       <Navbar 
         activeSection={activeSection} 
         mobileMenuOpen={mobileMenuOpen} 
@@ -119,14 +119,17 @@ function App() {
         setLang={setLang}
         t={t.nav}
       />
-      <main className="pt-24 pb-12">
+      
+      <main className="relative z-10 pt-24 pb-20 max-w-5xl mx-auto px-6 flex flex-col gap-6">
         <Hero t={t.hero} />
-        <About t={t.about} />
-        <Skills skills={skills} t={t.skills} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          <About t={t.about} />
+          <Skills skills={skills} t={t.skills} />
+        </div>
         <Experience experiences={experiences} t={t.experience} skillsT={t.skills} />
         <Projects repos={repos} loading={loading} t={t.projects} />
+        <Contact handleSubmit={handleSubmit} formStatus={formStatus} t={t.contact} />
       </main>
-      <Contact handleSubmit={handleSubmit} formStatus={formStatus} t={t.contact} />
     </div>
   );
 }
