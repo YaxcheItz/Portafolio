@@ -15,6 +15,17 @@ function App() {
 
   const [repos] = useState([
     {
+      id: 3,
+      name: "Smart Support Dashboard",
+      description: lang === 'es'
+        ? "Plataforma full-stack para optimizar flujos de soporte técnico. Construida con Spring Boot y TypeScript, ofrece visualización de datos en tiempo real y gestión de tickets. Contenerizada con Docker y desplegada en Vercel."
+        : "Full-stack management platform developed to optimize technical support workflows. Built with Spring Boot and TypeScript, it provides real-time data visualization and ticket management. Containerized with Docker and deployed via Vercel.",
+      html_url: "https://github.com/YaxcheItz/SmartSupportDashboardApplication",
+      live_url: "https://smartsupportdashboard.vercel.app/dashboard",
+      language: "Spring Boot / TypeScript",
+      updated_at: "2026-03-15"
+    },
+    {
       id: 1,
       name: "RAPPI-SAFE",
       description: lang === 'es' 
@@ -53,6 +64,8 @@ function App() {
     { name: "Laravel", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg" },
     { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
     { name: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" },
+    { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" },
+    { name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" },
     { name: "Spring Boot", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" }
   ];
 
