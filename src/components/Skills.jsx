@@ -36,9 +36,9 @@ const Skills = ({ skills, t }) => {
         viewport={{ once: true }}
         className="grid grid-cols-2 sm:grid-cols-3 gap-3"
       >
-        {skills.map((skill, index) => (
+        {skills.map((skill) => (
           <motion.div 
-            key={index} 
+            key={skill.name} 
             variants={item}
             className="flex items-center gap-2.5 p-2 bg-gray-800/20 border border-gray-700/30 rounded-xl hover:border-blue-500/30 transition-all cursor-default group"
           >
