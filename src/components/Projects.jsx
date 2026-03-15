@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { GithubIcon } from './Icons';
+import { skills } from '../data/constants';
 
 const Projects = ({ repos, loading, t }) => {
   const container = {
@@ -16,6 +17,12 @@ const Projects = ({ repos, loading, t }) => {
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
+  // Helper function to find the icon path based on the technology name
+  const getTechIcon = (techName) => {
+    const foundSkill = skills.find(s => s.name.toLowerCase() === techName.toLowerCase() || s.name.toLowerCase().includes(techName.toLowerCase()));
+    return foundSkill ? foundSkill.icon : null;
   };
 
   return (
@@ -51,48 +58,80 @@ const Projects = ({ repos, loading, t }) => {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {repos.map(repo => (
-            <motion.div 
+            <motion.article 
               key={repo.id} 
               variants={item}
-              className="bg-gray-800/20 border border-gray-700/30 rounded-xl overflow-hidden hover:border-cyan-500/20 hover:bg-gray-800/40 transition-all duration-300 flex flex-col h-full group"
+              className="bg-gray-800/20 border border-gray-700/30 rounded-xl overflow-hidden hover:border-cyan-500/30 hover:bg-gray-800/60 transition-all duration-300 flex flex-col h-full group shadow-lg"
             >
-              <div className="p-5 flex-grow flex flex-col">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="p-2.5 bg-gray-900 rounded-lg text-cyan-400 scale-90 shadow-inner">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                  </div>
-                  <div className="flex gap-3">
-                    {repo.html_url && (
-                      <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors scale-90" title="GitHub">
-                        <GithubIcon />
-                      </a>
-                    )}
-                    {repo.live_url && (
-                      <a href={repo.live_url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-cyan-400 transition-colors scale-90" title="Live">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    )}
-                  </div>
+              {/* Project Image Preview */}
+              {repo.image && (
+                <div className="w-full h-48 overflow-hidden border-b border-gray-700/30 relative">
+                  <img 
+                    src={repo.image} 
+                    alt={`Preview of ${repo.name}`} 
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                  />
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
-                <h3 className="text-base font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+              )}
+
+              <div className="p-6 flex-grow flex flex-col">
+                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
                   {repo.name}
                 </h3>
-                <p className="text-xs text-gray-400 leading-relaxed mb-4 flex-grow font-medium">
+                <p className="text-sm text-gray-400 leading-relaxed mb-6 flex-grow font-medium">
                   {repo.description || t.defaultDescription}
                 </p>
-              </div>
-              <div className="px-5 py-3 bg-gray-900/30 border-t border-gray-800/50 mt-auto flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-500 mr-2 shadow-[0_0_5px_rgba(6,182,212,0.5)]"></div>
-                  <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">{repo.language || t.code}</span>
+                
+                {/* Technologies List with Icons */}
+                {repo.techs && repo.techs.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {repo.techs.map((tech, index) => (
+                      <div key={index} className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-gray-900/50 border border-gray-700/50">
+                        {getTechIcon(tech) && (
+                          <img src={getTechIcon(tech)} alt={tech} className="w-3.5 h-3.5 opacity-80" />
+                        )}
+                        <span className="text-[10px] font-bold text-gray-300 uppercase tracking-wider">{tech}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Call to Action Buttons */}
+                <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-800/50">
+                  {repo.live_url && (
+                    <a 
+                      href={repo.live_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      aria-label={`Visit site for ${repo.name}`}
+                      className="flex-1 bg-cyan-600/10 hover:bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 hover:border-cyan-400/50 transition-all rounded-lg py-2.5 px-4 flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-wider group/btn"
+                    >
+                      <span>{t.visitSite || 'Visit Site'}</span>
+                      <svg className="w-4 h-4 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  )}
+                  {repo.html_url && (
+                    <a 
+                      href={repo.html_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      aria-label={`View source code of ${repo.name} on GitHub`}
+                      className="p-2.5 bg-gray-900 hover:bg-gray-800 text-gray-400 hover:text-white border border-gray-700/50 transition-all rounded-lg flex items-center justify-center"
+                      title={t.sourceCode || 'Code'}
+                    >
+                      <GithubIcon className="w-5 h-5" />
+                    </a>
+                  )}
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </motion.div>
       )}
