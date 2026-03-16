@@ -20,6 +20,10 @@ function App() {
   const [activeSection, setActiveSection] = useState('inicio');
 
   useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  useEffect(() => {
     const sections = document.querySelectorAll('section[id]');
     const observerOptions = { root: null, rootMargin: '-50% 0px -50% 0px', threshold: 0 };
     const observerCallback = (entries) => {

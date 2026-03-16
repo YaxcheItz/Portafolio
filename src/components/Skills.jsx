@@ -40,9 +40,12 @@ const Skills = ({ skills, t }) => {
           <motion.div 
             key={skill.name} 
             variants={item}
-            className="flex items-center gap-2.5 p-2 bg-gray-800/20 border border-gray-700/30 rounded-xl hover:border-blue-500/30 transition-all cursor-default group"
+            className="relative flex items-center gap-2.5 p-2 bg-gray-800/20 border border-gray-700/30 rounded-xl hover:border-cyan-500/50 hover:bg-gray-800/60 transition-all cursor-default group overflow-hidden"
           >
-            <div className="w-5 h-5 flex items-center justify-center">
+            {/* Hover Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none -z-10"></div>
+            
+            <div className="w-5 h-5 flex items-center justify-center relative z-10">
               <img src={skill.icon} alt={skill.name} className="w-full h-full opacity-60 group-hover:opacity-100 transition-opacity object-contain" />
             </div>
             <span className="text-[10px] font-black text-gray-500 group-hover:text-white uppercase tracking-wider">{skill.name}</span>
