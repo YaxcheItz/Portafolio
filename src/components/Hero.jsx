@@ -3,16 +3,16 @@ import { motion } from 'motion/react';
 
 const Hero = ({ t }) => {
   return (
-    <section id="inicio" className="relative w-full rounded-2xl border border-gray-800/50 bg-gray-900/20 backdrop-blur-md p-6 md:p-10 flex flex-col items-center text-center overflow-hidden shadow-xl" aria-label="Sección de bienvenida">
+    <section id="inicio" className="relative w-full rounded-2xl border border-zinc-200 dark:border-zinc-800/50 bg-white dark:bg-zinc-900/30 shadow-xl shadow-zinc-200/50 dark:shadow-black/20 p-6 md:p-10 flex flex-col items-center text-center overflow-hidden transition-colors" aria-label="Sección de bienvenida">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-400 text-[10px] font-black uppercase tracking-[0.2em]"
+        className="inline-flex items-center gap-2 mb-6 px-3 py-1 rounded-full border border-zinc-300 dark:border-zinc-500/30 bg-zinc-100 dark:bg-zinc-500/10 text-zinc-600 dark:text-zinc-300 text-[10px] font-black uppercase tracking-[0.2em]"
       >
         <span className="relative flex h-1.5 w-1.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-cyan-500"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-zinc-500 dark:bg-zinc-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-zinc-600 dark:bg-zinc-300"></span>
         </span>
         {t.available}
       </motion.div>
@@ -21,16 +21,16 @@ const Hero = ({ t }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="text-4xl md:text-6xl font-black text-white tracking-tight mb-6 leading-tight"
+        className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white tracking-tight mb-6 leading-tight"
       >
-        {t.greeting}<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">Yaxche</span>
+        {t.greeting}<span className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-600 via-zinc-900 to-zinc-500 dark:from-zinc-200 dark:via-white dark:to-zinc-400">Yaxche</span>
       </motion.h1>
 
       <motion.p 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="max-w-xl text-base md:text-lg text-gray-400 leading-relaxed font-medium mb-8"
+        className="max-w-xl text-base md:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium mb-8"
       >
         {t.description}
       </motion.p>
@@ -44,7 +44,7 @@ const Hero = ({ t }) => {
         <a 
           href="/CV_YaxcheItz.pdf" 
           download
-          className="px-8 py-3 rounded-xl bg-cyan-600/90 text-white font-black text-[10px] uppercase tracking-[0.2em] hover:bg-cyan-500 transition-all shadow-lg shadow-cyan-900/20 flex items-center gap-3 group"
+          className="px-8 py-3 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 font-black text-[10px] uppercase tracking-[0.2em] hover:bg-zinc-800 dark:hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 dark:focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950 transition-all shadow-lg shadow-zinc-900/10 dark:shadow-white/10 flex items-center gap-3 group"
         >
           <svg className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
@@ -57,7 +57,7 @@ const Hero = ({ t }) => {
             href="https://www.linkedin.com/in/yaxche-itzamna-ramirez-garcia-b7556a177" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="p-3 rounded-xl border border-gray-800 bg-gray-900/50 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all text-gray-400 hover:text-blue-400 shadow-lg shadow-black/20"
+            className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 hover:border-zinc-900/50 dark:hover:border-white/50 hover:bg-zinc-100 dark:hover:bg-white/10 transition-all text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white shadow-lg shadow-zinc-200/50 dark:shadow-black/20"
             title="LinkedIn"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@ const Hero = ({ t }) => {
             href="https://github.com/YaxcheItz" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="p-3 rounded-xl border border-gray-800 bg-gray-900/50 hover:border-purple-500/50 hover:bg-purple-500/5 transition-all text-gray-400 hover:text-purple-400 shadow-lg shadow-black/20"
+            className="p-3 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 hover:border-zinc-900/50 dark:hover:border-white/50 hover:bg-zinc-100 dark:hover:bg-white/10 transition-all text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white shadow-lg shadow-zinc-200/50 dark:shadow-black/20"
             title="GitHub"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

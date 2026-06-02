@@ -76,6 +76,15 @@ export const translations = {
         techs: ["Spring Boot", "TypeScript"]
       },
       {
+        id: 4,
+        name: "Sistema Oficialía",
+        description: "Software de gestión documental para la Oficialía de Partes. Construido como Single Page Application (SPA) utilizando React y React Router para ofrecer una experiencia de usuario rápida y fluida en la navegación de trámites.",
+        html_url: "https://github.com/YaxcheItz/SistemaOficialia",
+        live_url: "https://sistemaoficialia.onrender.com/login",
+        image: "/projects/oficialia.jpg",
+        techs: ["React", "JavaScript"]
+      },
+      {
         id: 1,
         name: "RAPPI-SAFE",
         description: "Aplicación de monitoreo de seguridad desarrollada con Django y TailwindCSS. Implementé un sistema de notificaciones en tiempo real a través de la API de Telegram y diseñé un flujo de despliegue automatizado en Render.",
@@ -172,6 +181,15 @@ export const translations = {
         live_url: "https://smartsupportdashboard.vercel.app/dashboard",
         image: "/projects/smart-support.jpg",
         techs: ["Spring Boot", "TypeScript"]
+      },
+      {
+        id: 4,
+        name: "Sistema Oficialía",
+        description: "Document management software for the 'Oficialía de Partes'. Built as a Single Page Application (SPA) using React and React Router to deliver a fast and seamless user experience for navigating administrative procedures.",
+        html_url: "https://github.com/YaxcheItz/SistemaOficialia",
+        live_url: "https://sistemaoficialia.onrender.com/login",
+        image: "/projects/oficialia.jpg",
+        techs: ["React", "JavaScript"]
       },
       {
         id: 1,

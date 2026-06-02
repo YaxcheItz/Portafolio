@@ -14,6 +14,15 @@ function App() {
   const [lang, setLang] = useState('es');
   const t = translations[lang];
 
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) return savedTheme;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return 'dark';
+  });
+
   const [loading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formStatus, setFormStatus] = useState({ sending: false, success: false, error: false });
@@ -22,6 +31,15 @@ function App() {
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     const sections = document.querySelectorAll('section[id]');
@@ -57,13 +75,12 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] font-sans text-gray-300 selection:bg-cyan-500 selection:text-white transition-colors duration-300 relative overflow-x-hidden">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans text-zinc-600 dark:text-zinc-300 selection:bg-zinc-900 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-zinc-950 transition-colors duration-300 relative overflow-x-hidden">
       {/* Global Background Elements */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-[0.1]"></div>
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/10 blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-        <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] rounded-full bg-cyan-600/5 blur-[100px]"></div>
+      <div className="fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-100 via-zinc-50 to-zinc-50 dark:from-zinc-900 dark:via-zinc-950 dark:to-zinc-950">
+        {/* Very subtle monochrome glows */}
+        <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] rounded-full bg-zinc-300/30 dark:bg-zinc-800/20 blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-zinc-200/50 dark:bg-white/5 blur-[120px]"></div>
       </div>
 
       <Navbar 
@@ -72,6 +89,8 @@ function App() {
         setMobileMenuOpen={setMobileMenuOpen} 
         lang={lang}
         setLang={setLang}
+        theme={theme}
+        setTheme={setTheme}
         t={t.nav}
       />
       
