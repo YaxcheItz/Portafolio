@@ -1,76 +1,116 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { GithubIcon, LinkedinIcon } from './Icons';
 
 const Contact = ({ handleSubmit, formStatus, t }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText('yaxtibla1@gmail.com');
+      setCopied(true);
+      toast.success(t.emailCopied || '¡Copiado!', {
+        description: 'yaxtibla1@gmail.com',
+      });
+      setTimeout(() => setCopied(false), 2400);
+    } catch {
+      // fallback
+    }
+  };
+
   return (
-    <footer id="contacto" className="relative w-full rounded-2xl border border-zinc-200 dark:border-zinc-800/50 bg-white dark:bg-zinc-900/30 p-6 md:p-10 overflow-hidden shadow-xl shadow-zinc-200/50 dark:shadow-black/20 mb-12 transition-colors" role="contentinfo" aria-labelledby="contacto-heading">
-      <div className="max-w-3xl mx-auto text-center">
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          id="contacto-heading" className="text-3xl md:text-5xl font-black text-zinc-900 dark:text-white mb-6"
-        >
-          {t.title}
-        </motion.h2>
-        
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-base text-zinc-600 dark:text-zinc-400 mb-10 max-w-xl mx-auto font-medium"
-        >
-          {t.description}
-        </motion.p>
-        
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="bg-zinc-50 dark:bg-zinc-950/40 border border-zinc-200 dark:border-zinc-800/50 rounded-2xl p-6 md:p-8 shadow-inner max-w-xl mx-auto mb-12 relative overflow-hidden group"
-        >
-          <form onSubmit={handleSubmit} className="text-left relative z-10 space-y-6">
-            <div className="grid grid-cols-1 gap-6">
-              <div>
-                <label htmlFor="name" className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-2">{t.name}</label>
-                <input type="text" id="name" name="from_name" required disabled={formStatus.sending} className="w-full bg-white dark:bg-zinc-900/50 border border-zinc-300 dark:border-zinc-700/50 rounded-lg px-4 py-3 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-zinc-900 dark:focus:border-white focus:ring-1 focus:ring-zinc-900 dark:focus:ring-white transition-all disabled:opacity-50 font-medium" placeholder={t.placeholderName} />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-2">{t.email}</label>
-                <input type="email" id="email" name="from_email" required disabled={formStatus.sending} className="w-full bg-white dark:bg-zinc-900/50 border border-zinc-300 dark:border-zinc-700/50 rounded-lg px-4 py-3 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-zinc-900 dark:focus:border-white focus:ring-1 focus:ring-zinc-900 dark:focus:ring-white transition-all disabled:opacity-50 font-medium" placeholder={t.placeholderEmail} />
-              </div>
-              <div>
-                <label htmlFor="message" className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-2">{t.message}</label>
-                <textarea id="message" name="message" rows="4" required disabled={formStatus.sending} className="w-full bg-white dark:bg-zinc-900/50 border border-zinc-300 dark:border-zinc-700/50 rounded-lg px-4 py-3 text-zinc-900 dark:text-white text-sm focus:outline-none focus:border-zinc-900 dark:focus:border-white focus:ring-1 focus:ring-zinc-900 dark:focus:ring-white transition-all resize-none disabled:opacity-50 font-medium" placeholder={t.placeholderMessage}></textarea>
-              </div>
+    <section id="contacto" tabIndex={-1} className="section-card md:p-10" aria-labelledby="contacto-heading">
+      <div className="mx-auto max-w-3xl text-center">
+        <h2 id="contacto-heading" className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">{t.title}</h2>
+        <p className="mx-auto mb-6 max-w-xl text-sm leading-relaxed text-muted md:text-base">{t.description}</p>
 
-              {formStatus.success && (
-                <div className="bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-white px-4 py-3 rounded-lg text-xs font-bold">
-                  {t.success}
-                </div>
-              )}
-              {formStatus.error && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-500/50 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-xs font-bold">
-                  {t.error}
-                </div>
-              )}
+        {/* Quick Email Chip */}
+        <div className="mb-8 flex justify-center">
+          <button
+            type="button"
+            onClick={handleCopyEmail}
+            className="group inline-flex items-center gap-2.5 rounded-full border border-line bg-panel px-4 py-2 text-xs font-medium text-ink shadow-xs transition-all hover:border-control hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-muted group-hover:text-ink" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            <span className="font-mono text-xs">yaxtibla1@gmail.com</span>
+            <span className="ml-1 rounded bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-muted border border-line group-hover:text-ink">
+              {copied ? (t.emailCopied || '¡Copiado!') : (t.copyEmail || 'Copiar')}
+            </span>
+          </button>
+        </div>
 
-              <button
-                type="submit"
-                disabled={formStatus.sending}
-                className="w-full bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-950 font-black uppercase tracking-widest py-4 px-6 rounded-lg shadow-lg shadow-zinc-900/10 dark:shadow-white/10 transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 dark:focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-950"
-              >
-                {formStatus.sending ? t.sending : t.send}
-              </button>
-            </div>
-          </form>
-        </motion.div>
+        <form onSubmit={handleSubmit} aria-label={t.formTitle} aria-busy={formStatus.sending} className="mx-auto max-w-xl space-y-5 rounded-2xl border border-line bg-panel p-5 text-left sm:p-7">
+          <div>
+            <label htmlFor="name" className="eyebrow mb-2 block text-muted">{t.name}</label>
+            <input
+              type="text"
+              id="name"
+              name="from_name"
+              autoComplete="name"
+              maxLength={80}
+              required
+              readOnly={formStatus.sending}
+              className="w-full rounded-lg border border-control bg-surface px-4 py-3 text-base text-ink placeholder:text-muted"
+              placeholder={t.placeholderName}
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="eyebrow mb-2 block text-muted">{t.email}</label>
+            <input
+              type="email"
+              id="email"
+              name="from_email"
+              autoComplete="email"
+              maxLength={100}
+              spellCheck={false}
+              required
+              readOnly={formStatus.sending}
+              className="w-full rounded-lg border border-control bg-surface px-4 py-3 text-base text-ink placeholder:text-muted"
+              placeholder={t.placeholderEmail}
+            />
+          </div>
+          <div>
+            <label htmlFor="message" className="eyebrow mb-2 block text-muted">{t.message}</label>
+            <textarea
+              id="message"
+              name="message"
+              rows={4}
+              maxLength={2500}
+              required
+              readOnly={formStatus.sending}
+              className="min-h-32 w-full resize-y rounded-lg border border-control bg-surface px-4 py-3 text-base text-ink placeholder:text-muted"
+              placeholder={t.placeholderMessage}
+            />
+          </div>
+          <div aria-live="polite" aria-atomic="true">
+            {formStatus.success && <p className="rounded-lg border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-ink">{t.success}</p>}
+            {formStatus.rateLimited && <p className="rounded-lg border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-ink">{t.rateLimit || 'Espera unos segundos antes de enviar otro mensaje.'}</p>}
+            {formStatus.error && <p className="rounded-lg border border-control bg-surface px-4 py-3 text-sm leading-relaxed text-ink">{t.error}</p>}
+          </div>
+
+          {/* Honeypot field for bot protection */}
+          <input
+            type="text"
+            name="_honey_bot"
+            tabIndex={-1}
+            autoComplete="off"
+            className="hidden pointer-events-none opacity-0 absolute -left-[9999px]"
+            aria-hidden="true"
+          />
+
+          <button type="submit" disabled={formStatus.sending} className="button-primary w-full disabled:cursor-wait disabled:opacity-60">
+            {formStatus.sending ? t.sending : t.send}<span aria-hidden="true">→</span>
+          </button>
+        </form>
+        <div className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2">
+          <a href="https://www.linkedin.com/in/yaxche-itzamna-ramirez-garcia-b7556a177" target="_blank" rel="noopener noreferrer" className="text-link"><LinkedinIcon className="h-4 w-4" />{t.linkedin}<span aria-hidden="true">↗</span></a>
+          <a href="https://github.com/YaxcheItz" target="_blank" rel="noopener noreferrer" className="text-link"><GithubIcon className="h-4 w-4" />{t.github}<span aria-hidden="true">↗</span></a>
+        </div>
       </div>
-    </footer>
+    </section>
   );
 };
 

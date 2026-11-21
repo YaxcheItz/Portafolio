@@ -1,39 +1,31 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 
 const About = ({ t }) => {
+  const reduceMotion = useReducedMotion();
   return (
-    <section id="sobre-mi" className="relative h-full rounded-2xl border border-zinc-200 dark:border-zinc-800/50 bg-white dark:bg-zinc-900/30 p-6 md:p-8 overflow-hidden shadow-xl shadow-zinc-200/50 dark:shadow-black/20 transition-colors" aria-labelledby="sobre-mi-heading">
-      <motion.h2 
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        id="sobre-mi-heading" className="text-xl font-bold text-zinc-900 dark:text-white mb-6 flex items-center"
-      >
-        <span className="w-6 h-[2px] bg-zinc-900 dark:bg-white mr-3"></span> {t.title}
-      </motion.h2>
-      
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="space-y-4"
-      >
-        <div>
-          <h3 className="text-zinc-700 dark:text-zinc-200 font-bold mb-2 uppercase tracking-widest text-[10px]">{t.role}</h3>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium">{t.p1}</p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3 pt-2">
-          {t.interests.map((interest, idx) => (
-            <div key={idx} className="flex items-center gap-3 p-3 bg-zinc-50 dark:bg-zinc-800/30 border border-zinc-100 dark:border-zinc-700/50 rounded-xl hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-all group">
-              <span className="text-lg group-hover:scale-110 transition-transform">{interest.icon}</span>
-              <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors uppercase tracking-wider">{interest.label}</span>
+    <section id="sobre-mi" className="section-card h-full" aria-labelledby="sobre-mi-heading">
+      <motion.div initial={reduceMotion ? false : { opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.45 }}>
+        <h2 id="sobre-mi-heading" className="section-title mb-6"><span className="h-px w-6 shrink-0 bg-ink" aria-hidden="true" />{t.title}</h2>
+        <h3 className="mb-3 text-sm font-semibold">{t.role}</h3>
+        <div className="space-y-3 text-sm leading-relaxed text-muted"><p>{t.p1}</p><p>{t.p2}</p></div>
+        <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {t.interests.map(interest => <li key={interest} className="flex items-center gap-2 rounded-xl border border-line bg-panel p-2.5 text-xs font-medium text-muted">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="shrink-0 text-ink" aria-hidden="true"><path d="m9 6-6 6 6 6m6-12 6 6-6 6" /></svg><span className="truncate">{interest}</span>
+          </li>)}
+        </ul>
+        {t.principles && (
+          <div className="mt-6 border-t border-line pt-4">
+            <h4 className="mb-3 text-xs font-semibold tracking-wide text-ink">{t.principlesTitle}</h4>
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+              {t.principles.map(p => (
+                <div key={p.title} className="rounded-lg border border-line bg-panel p-2.5 transition-colors hover:border-control">
+                  <span className="block text-xs font-semibold text-ink">{p.title}</span>
+                  <span className="mt-0.5 block text-[11px] leading-relaxed text-muted">{p.desc}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </motion.div>
     </section>
   );

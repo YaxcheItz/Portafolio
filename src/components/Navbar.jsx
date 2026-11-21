@@ -1,133 +1,95 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { GithubIcon, LinkedinIcon } from './Icons';
+import { useEffect, useRef } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
-const Navbar = ({ activeSection, mobileMenuOpen, setMobileMenuOpen, lang, setLang, theme, setTheme, t }) => {
+const Navbar = ({ activeSection, mobileMenuOpen, setMobileMenuOpen, lang, setLang, theme, setTheme, t, onOpenCommand }) => {
+  const menuButton = useRef(null);
+  const reduceMotion = useReducedMotion();
+  const links = [
+    { id: 'sobre-mi', label: t.about },
+    { id: 'habilidades', label: t.skills },
+    { id: 'experiencia', label: t.experience },
+    { id: 'proyectos', label: t.projects },
+    { id: 'contacto', label: t.contact },
+  ];
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handleKey = (event) => {
+      if (event.key === 'Escape') {
+        setMobileMenuOpen(false);
+        menuButton.current.focus();
+      }
+    };
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) setMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleKey);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [mobileMenuOpen, setMobileMenuOpen]);
+
+  const navigate = (id) => {
+    setMobileMenuOpen(false);
+    document.getElementById(id).focus({ preventScroll: true });
+  };
+
   return (
-    <nav className="fixed w-full z-50 bg-white/90 dark:bg-zinc-950/80 backdrop-blur-md shadow-sm border-b border-zinc-200 dark:border-zinc-800/50 transition-colors" role="navigation" aria-label="Navegación principal">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-6">
-            <a href="#inicio" className="text-lg font-bold text-zinc-900 dark:text-white tracking-wider flex items-center gap-2 group" aria-label="Ir al inicio">
-              <span className="bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 px-1.5 py-0.5 rounded font-black group-hover:bg-zinc-700 dark:group-hover:bg-zinc-200 transition-colors">Y</span>
-              Yaxche<span className="text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">.dev</span>
-            </a>
-
-            {/* Menú Desktop */}
-            <div className="hidden md:flex items-baseline space-x-5 ml-4">
-              {[
-                { id: 'sobre-mi', label: t.about },
-                { id: 'habilidades', label: t.skills },
-                { id: 'experiencia', label: t.experience },
-                { id: 'proyectos', label: t.projects },
-                { id: 'contacto', label: t.contact },
-              ].map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  className={`hover:text-zinc-900 dark:hover:text-white transition-colors px-1 py-2 text-xs font-bold uppercase tracking-wider relative group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 dark:focus-visible:ring-white rounded-sm ${
-                    activeSection === item.id ? 'text-zinc-900 dark:text-white' : 'text-zinc-500 dark:text-zinc-400'
-                  }`}
-                >
-                  {item.label}
-                  {activeSection === item.id && (
-                    <motion.div
-                      layoutId="activeSection"
-                      className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-zinc-900 dark:bg-white rounded-full"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </a>
-              ))}
-            </div>
+    <nav className="fixed inset-x-0 top-0 z-50 border-b border-line bg-paper/95 backdrop-blur-sm" aria-label={t.label}>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between gap-4">
+          <a href="#inicio" aria-label={t.home} className="flex min-h-11 items-center gap-2 font-semibold tracking-tight" translate="no">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-ink text-xl font-bold text-surface" aria-hidden="true">Y</span>
+            <span>Yaxche<span className="text-muted">.dev</span></span>
+          </a>
+          <div className="hidden items-center gap-5 lg:flex">
+            {links.map(link => <a key={link.id} href={`#${link.id}`} aria-current={activeSection === link.id ? 'location' : undefined} className={`relative flex min-h-11 min-w-11 items-center justify-center text-[13px] font-medium transition-colors hover:text-ink ${activeSection === link.id ? 'text-ink' : 'text-muted'}`}>
+              {link.label}
+              {activeSection === link.id && <motion.span layoutId="active-section" initial={false} transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 380, damping: 30 }} className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-ink" aria-hidden="true" />}
+            </a>)}
           </div>
-
-          <div className="flex items-center gap-3">
-            {/* Theme Toggle */}
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="p-1.5 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/50 hover:bg-zinc-200 dark:hover:bg-white/50 transition-all text-zinc-600 dark:text-zinc-400"
-              aria-label="Toggle Dark Mode"
+              type="button"
+              onClick={onOpenCommand}
+              aria-label="Comandos (Ctrl+K)"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-line bg-panel px-2.5 py-1.5 text-xs text-muted transition-colors hover:border-control hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink"
             >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <span className="text-[11px] font-medium">Ctrl K</span>
+            </button>
+            <button
+              type="button"
+              onClick={onOpenCommand}
+              aria-label="Buscar"
+              className="flex sm:hidden h-11 w-11 items-center justify-center rounded-xl text-muted transition-colors hover:bg-panel hover:text-ink"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </button>
+            <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label={theme === 'dark' ? t.lightMode : t.darkMode} className="flex h-11 w-11 items-center justify-center rounded-xl text-muted transition-colors hover:bg-panel hover:text-ink">
               {theme === 'dark' ? (
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" /></svg>
               ) : (
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M20.8 13A9 9 0 0111 3.2 9 9 0 1020.8 13z" /></svg>
               )}
             </button>
-
-            {/* Language Toggle */}
-            <button
-              onClick={() => setLang(lang === 'es' ? 'en' : 'es')}
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/50 hover:border-zinc-400 dark:hover:border-white/50 transition-all text-[10px] font-black text-zinc-600 dark:text-zinc-400"
-              aria-label={lang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
-            >
-              <span className={lang === 'es' ? 'text-zinc-900 dark:text-white' : ''}>ES</span>
-              <span className="text-zinc-400 dark:text-zinc-600">|</span>
-              <span className={lang === 'en' ? 'text-zinc-900 dark:text-white' : ''}>EN</span>
-            </button>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:outline-none transition-colors"
-              aria-expanded={mobileMenuOpen}
-              aria-label="Abrir menú principal"
-            >
-              <span className="sr-only">Abrir menú principal</span>
-              {!mobileMenuOpen ? (
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              ) : (
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              )}
+            <button type="button" onClick={() => setLang(lang === 'es' ? 'en' : 'es')} aria-label={t.switchLanguage} className="flex h-11 min-w-11 items-center justify-center rounded-xl px-2 text-[13px] font-semibold text-muted transition-colors hover:bg-panel hover:text-ink" translate="no">{lang === 'es' ? 'EN' : 'ES'}</button>
+            <button ref={menuButton} type="button" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-expanded={mobileMenuOpen} aria-controls="menu-movil" aria-label={mobileMenuOpen ? t.closeMenu : t.openMenu} className="flex h-11 w-11 items-center justify-center rounded-xl text-ink transition-colors hover:bg-panel lg:hidden">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">{mobileMenuOpen ? <path d="M6 6l12 12M6 18L18 6" /> : <path d="M4 7h16M4 12h16M4 17h16" />}</svg>
             </button>
           </div>
         </div>
-
-        {/* Menú Mobile Desplegable */}
-        {mobileMenuOpen && (
-          <div className="md:hidden pb-6 pt-2 space-y-2 border-t border-zinc-200 dark:border-zinc-800 mt-2 bg-white/95 dark:bg-zinc-950/95 shadow-lg rounded-b-xl px-2">
-            {[
-              { id: 'sobre-mi', label: t.about },
-              { id: 'habilidades', label: t.skills },
-              { id: 'experiencia', label: t.experience },
-              { id: 'proyectos', label: t.projects },
-              { id: 'contacto', label: t.contact },
-            ].map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 rounded-xl text-sm font-bold tracking-wider uppercase transition-colors ${
-                  activeSection === item.id ? 'bg-zinc-100 dark:bg-white/10 text-zinc-900 dark:text-white border border-zinc-200 dark:border-white/20' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white'
-                }`}
-              >
-                {item.label}
-              </a>
-            ))}
-            
-            {/* Language Toggle for Mobile */}
-            <div className="pt-4 mt-2 border-t border-zinc-200 dark:border-zinc-800 flex justify-center">
-               <button
-                onClick={() => { setLang(lang === 'es' ? 'en' : 'es'); setMobileMenuOpen(false); }}
-                className="flex items-center gap-2 px-6 py-2 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800/80 active:scale-95 transition-transform text-xs font-black text-zinc-600 dark:text-zinc-400 w-full justify-center"
-              >
-                <span className={lang === 'es' ? 'text-zinc-900 dark:text-white' : ''}>ESPAÑOL</span>
-                <span className="text-zinc-400 dark:text-zinc-600 px-2">-</span>
-                <span className={lang === 'en' ? 'text-zinc-900 dark:text-white' : ''}>ENGLISH</span>
-              </button>
-            </div>
-          </div>
-        )}
+        <div id="menu-movil" hidden={!mobileMenuOpen} className="border-t border-line pb-5 pt-3 lg:hidden">
+          {links.map(link => <a key={link.id} href={`#${link.id}`} onClick={() => navigate(link.id)} aria-current={activeSection === link.id ? 'location' : undefined} className={`flex min-h-11 items-center rounded-xl px-3 text-sm font-medium transition-colors hover:bg-panel hover:text-ink ${activeSection === link.id ? 'bg-panel text-ink' : 'text-muted'}`}>{link.label}</a>)}
+        </div>
       </div>
     </nav>
   );
